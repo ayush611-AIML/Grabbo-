@@ -80,41 +80,7 @@ function ShelfUnit({ position, rotation }) {
   )
 }
 
-function FridgeUnit({ position, rotation }) {
-  return (
-    <group position={position} rotation={rotation}>
-      {/* Fridge Body */}
-      <mesh position={[0, 2, -0.4]} castShadow receiveShadow>
-        <boxGeometry args={[4, 4, 1]} />
-        <meshStandardMaterial color="#050814" metalness={0.9} roughness={0.1} />
-      </mesh>
-      
-      {/* Glass Door */}
-      <mesh position={[0, 2, 0.15]}>
-        <boxGeometry args={[3.8, 3.8, 0.05]} />
-        <meshPhysicalMaterial 
-          color="#88ccff" 
-          transmission={0.9} 
-          opacity={1} 
-          metalness={1} 
-          roughness={0} 
-          ior={1.5} 
-          thickness={0.05} 
-        />
-      </mesh>
 
-      {/* Internal Cool Light */}
-      <pointLight color="#baddff" intensity={30} position={[0, 2, 0.1]} distance={6} />
-
-      {/* Drinks Inside */}
-      {[0.5, 1.2, 1.9, 2.6, 3.3].map((y, i) => (
-        <group key={i} position={[0, y, -0.2]}>
-          <Products count={20} width={3.6} height={0.3} depth={0.4} />
-        </group>
-      ))}
-    </group>
-  )
-}
 
 export default function StoreInterior() {
   const aisleLength = 40
@@ -167,11 +133,9 @@ export default function StoreInterior() {
         <ShelfUnit key={`l-${i}`} position={[-aisleWidth / 2, 0, -z]} rotation={[0, Math.PI / 2, 0]} />
       ))}
 
-      {/* Right Aisle (Mix of Fridges and Shelves) */}
+      {/* Right Aisle (All Shelves) */}
       {rightShelves.map((z, i) => (
-        i % 3 === 0 
-          ? <FridgeUnit key={`r-${i}`} position={[aisleWidth / 2, 0, -z]} rotation={[0, -Math.PI / 2, 0]} />
-          : <ShelfUnit key={`r-${i}`} position={[aisleWidth / 2, 0, -z]} rotation={[0, -Math.PI / 2, 0]} />
+        <ShelfUnit key={`r-${i}`} position={[aisleWidth / 2, 0, -z]} rotation={[0, -Math.PI / 2, 0]} />
       ))}
       
       {/* End of Aisle Wall / Cash Wrap Placeholder */}
@@ -184,18 +148,18 @@ export default function StoreInterior() {
         {/* Glowing Logo Sign at the back */}
         <group position={[0, 3.5, 0.61]}>
           <Text
-            position={[0, 0.8, 0]}
-            fontSize={1.2}
-            color="#d4af37"
+            position={[-0.12, 0.4, 0]}
+            fontSize={0.9}
+            color="#ffffff"
             letterSpacing={0.2}
             anchorX="center"
             anchorY="middle"
           >
             GRABBO
-            <meshBasicMaterial color="#d4af37" toneMapped={false} />
+            <meshBasicMaterial color="#ffffff" toneMapped={false} />
           </Text>
-          <mesh position={[0, -0.6, 0]}>
-            <circleGeometry args={[0.8, 64]} />
+          <mesh position={[0, -1.0, 0]}>
+            <circleGeometry args={[0.7, 64]} />
             <meshBasicMaterial map={logoTexture} toneMapped={false} />
           </mesh>
         </group>

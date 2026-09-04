@@ -65,7 +65,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl lg:text-[7rem] font-bold text-white drop-shadow-2xl tracking-wide">
             GRABBO
           </h1>
-          <h2 className="text-4xl md:text-6xl font-light text-gold italic mb-8 drop-shadow-xl">
+          <h2 className="text-4xl md:text-6xl font-light text-white/90 italic mb-8 drop-shadow-2xl">
             Everyday Essentials
           </h2>
           <div className="w-16 h-[1px] bg-gold mb-8"></div>
@@ -341,8 +341,6 @@ export default function Home() {
               </p>
               <div className="flex gap-4">
                 <a href="https://www.instagram.com/grabbo_snu?igsi=MWRvZGVhYTg4dm5l" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-gold hover:text-gold transition-colors text-xs font-bold">IG</a>
-                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-gold hover:text-gold transition-colors text-xs font-bold">TW</a>
-                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-gold hover:text-gold transition-colors text-xs font-bold">FB</a>
               </div>
             </div>
             
