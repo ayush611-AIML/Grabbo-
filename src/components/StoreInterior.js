@@ -1,48 +1,56 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MeshReflectorMaterial, Text, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
 // Helper to create random colored products
 function Products({ count = 20, width, height, depth }) {
-  const products = useMemo(() => {
-    const items = []
-    const colors = ['#d4af37', '#1a2235', '#2a3b5c', '#ffffff', '#8a7322']
-    
+  const meshRef = useRef()
+  const { matrices, colors } = useMemo(() => {
+    const colorArray = ['#0f172a', '#ffffff', '#d4af37']
+    const matrices = new Float32Array(count * 16)
+    const colors = new Float32Array(count * 3)
+    const tempMatrix = new THREE.Matrix4()
+    const tempColor = new THREE.Color()
+
     for (let i = 0; i < count; i++) {
-      items.push({
-        position: [
-          (Math.random() - 0.5) * width * 0.9,
-          (Math.random() - 0.5) * height * 0.8,
-          (Math.random() - 0.5) * depth * 0.9,
-        ],
-        scale: [
-          0.1 + Math.random() * 0.1, // width
-          0.2 + Math.random() * 0.3, // height
-          0.1 + Math.random() * 0.1, // depth
-        ],
-        color: colors[Math.floor(Math.random() * colors.length)],
-        isGlowing: Math.random() > 0.8
-      })
+      const px = (Math.random() - 0.5) * width * 0.9
+      const py = (Math.random() - 0.5) * height * 0.8
+      const pz = (Math.random() - 0.5) * depth * 0.9
+      const sx = 0.1 + Math.random() * 0.1
+      const sy = 0.2 + Math.random() * 0.3
+      const sz = 0.1 + Math.random() * 0.1
+      
+      tempMatrix.identity()
+      tempMatrix.setPosition(px, py, pz)
+      tempMatrix.scale(new THREE.Vector3(sx, sy, sz))
+      tempMatrix.toArray(matrices, i * 16)
+      
+      tempColor.set(colorArray[Math.floor(Math.random() * colorArray.length)])
+      tempColor.toArray(colors, i * 3)
     }
-    return items
+    return { matrices, colors }
   }, [count, width, height, depth])
 
+  useEffect(() => {
+    if (meshRef.current) {
+      const instancedMesh = meshRef.current
+      for (let i = 0; i < count; i++) {
+        const matrix = new THREE.Matrix4().fromArray(matrices, i * 16)
+        instancedMesh.setMatrixAt(i, matrix)
+        const color = new THREE.Color().fromArray(colors, i * 3)
+        instancedMesh.setColorAt(i, color)
+      }
+      instancedMesh.instanceMatrix.needsUpdate = true
+      if (instancedMesh.instanceColor) instancedMesh.instanceColor.needsUpdate = true
+    }
+  }, [matrices, colors, count])
+
   return (
-    <group>
-      {products.map((p, i) => (
-        <mesh key={i} position={p.position}>
-          <boxGeometry args={p.scale} />
-          <meshStandardMaterial 
-            color={p.color} 
-            metalness={0.5} 
-            roughness={0.2}
-            emissive={p.isGlowing ? p.color : '#000'}
-            emissiveIntensity={p.isGlowing ? 0.5 : 0}
-          />
-        </mesh>
-      ))}
-    </group>
+    <instancedMesh ref={meshRef} args={[null, null, count]}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial metalness={0.5} roughness={0.2} />
+    </instancedMesh>
   )
 }
 

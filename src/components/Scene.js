@@ -2,7 +2,7 @@
 
 import { useRef, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Sparkles, Float, MeshDistortMaterial } from '@react-three/drei'
+import { Sparkles, Float, MeshDistortMaterial, BakeShadows, AdaptiveDpr } from '@react-three/drei'
 import { useNativeScroll } from '@/utils/useNativeScroll'
 import StoreInterior from './StoreInterior'
 
@@ -47,12 +47,15 @@ function CinematicBackground() {
 export default function Scene() {
   return (
     <div className="w-full h-screen fixed top-0 left-0 z-0 pointer-events-none">
-      <Canvas shadows camera={{ position: [0, 2, 0], fov: 45 }}>
+      <Canvas shadows dpr={[1, 1.5]} camera={{ position: [0, 2, 0], fov: 45 }}>
         <color attach="background" args={['#030508']} />
         <ambientLight intensity={2} />
         <directionalLight position={[10, 10, 5]} intensity={3} color="#d4af37" />
         <spotLight position={[-10, -10, -5]} intensity={2} color="#ffffff" />
         
+        <BakeShadows />
+        <AdaptiveDpr pixelated />
+
         <Suspense fallback={null}>
           <CinematicBackground />
         </Suspense>
