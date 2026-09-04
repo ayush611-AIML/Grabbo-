@@ -183,13 +183,9 @@ export default function StoreInterior() {
         
         {/* Glowing Logo Sign at the back */}
         <group position={[0, 3.5, 0.61]}>
-          <mesh position={[-2, 0, 0]}>
-            <circleGeometry args={[0.5, 64]} />
-            <meshBasicMaterial map={logoTexture} toneMapped={false} />
-          </mesh>
           <Text
-            position={[0.5, 0, 0]}
-            fontSize={0.8}
+            position={[0, 0.8, 0]}
+            fontSize={1.2}
             color="#d4af37"
             letterSpacing={0.2}
             anchorX="center"
@@ -198,6 +194,10 @@ export default function StoreInterior() {
             GRABBO
             <meshBasicMaterial color="#d4af37" toneMapped={false} />
           </Text>
+          <mesh position={[0, -0.6, 0]}>
+            <circleGeometry args={[0.8, 64]} />
+            <meshBasicMaterial map={logoTexture} toneMapped={false} />
+          </mesh>
         </group>
       </group>
     </group>
