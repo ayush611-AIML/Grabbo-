@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { ArrowRight, MapPin, Clock, ShieldAlert } from 'lucide-react'
-import Scene from '@/components/Scene'
+import dynamic from 'next/dynamic'
+const Scene = dynamic(() => import('@/components/Scene'), { ssr: false })
 import { getLatestArticles } from '../../backend/actions.js'
 
 export default function Home() {
