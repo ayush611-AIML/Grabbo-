@@ -1,6 +1,6 @@
 import { useRef, useMemo, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { MeshReflectorMaterial, Text, useTexture } from '@react-three/drei'
+import { Text, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
 // Helper to create random colored products
@@ -58,7 +58,7 @@ function ShelfUnit({ position, rotation }) {
   return (
     <group position={position} rotation={rotation}>
       {/* Backboard */}
-      <mesh position={[0, 2, -0.4]} castShadow receiveShadow>
+      <mesh position={[0, 2, -0.4]}>
         <boxGeometry args={[4, 4, 0.1]} />
         <meshStandardMaterial color="#0a0a0a" metalness={0.8} roughness={0.2} />
       </mesh>
@@ -66,7 +66,7 @@ function ShelfUnit({ position, rotation }) {
       {/* Shelves */}
       {[0.5, 1.5, 2.5, 3.5].map((y, i) => (
         <group key={i}>
-          <mesh position={[0, y, 0]} castShadow receiveShadow>
+          <mesh position={[0, y, 0]}>
             <boxGeometry args={[3.8, 0.05, 0.8]} />
             <meshStandardMaterial color="#111" metalness={0.6} roughness={0.4} />
           </mesh>
@@ -76,7 +76,6 @@ function ShelfUnit({ position, rotation }) {
             <boxGeometry args={[3.8, 0.02, 0.02]} />
             <meshBasicMaterial color="#d4af37" />
           </mesh>
-          <pointLight position={[0, y - 0.2, 0.2]} intensity={10} distance={3} color="#d4af37" />
 
           {/* Products on this specific shelf */}
           <group position={[0, y + 0.2, 0]}>
@@ -103,20 +102,9 @@ export default function StoreInterior() {
   return (
     <group>
       {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -aisleLength / 2]} receiveShadow>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -aisleLength / 2]}>
         <planeGeometry args={[aisleWidth * 3, aisleLength + 10]} />
-        <MeshReflectorMaterial
-          blur={[300, 100]}
-          resolution={1024}
-          mixBlur={1}
-          mixStrength={80}
-          roughness={0.1}
-          depthScale={1.2}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#050505"
-          metalness={0.8}
-        />
+        <meshStandardMaterial color="#050505" metalness={0.8} roughness={0.1} />
       </mesh>
 
       {/* Ceiling */}
@@ -126,13 +114,13 @@ export default function StoreInterior() {
       </mesh>
 
       {/* Overhead Fluorescent Lights */}
-      {Array.from({ length: 10 }, (_, i) => (
-        <group key={i} position={[0, 4.9, -i * 4]}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <group key={i} position={[0, 4.9, -i * 8]}>
           <mesh>
             <boxGeometry args={[0.2, 0.1, 2]} />
             <meshBasicMaterial color="#ffffff" />
           </mesh>
-          <pointLight intensity={20} distance={15} color="#ffffff" />
+          <pointLight intensity={25} distance={20} color="#ffffff" />
         </group>
       ))}
 

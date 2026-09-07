@@ -18,17 +18,13 @@ function CinematicBackground() {
     const maxZ = -30
     const targetZ = offset * maxZ
     
-    // Add subtle camera sway to make it feel cinematic and handheld
-    const swayX = Math.sin(state.clock.elapsedTime * 0.5) * 0.5
-    const swayY = Math.cos(state.clock.elapsedTime * 0.3) * 0.2
-    
-    // Smoothly interpolate the camera position
+    // Smoothly interpolate the camera position for zoom effect
     state.camera.position.z += (targetZ - state.camera.position.z) * 0.1
-    state.camera.position.x = swayX
-    state.camera.position.y = 2 + swayY // Camera at eye level (2 units up)
+    state.camera.position.x = 0
+    state.camera.position.y = 2 // Camera at eye level (2 units up)
     
     // Keep camera looking straight ahead down the aisle
-    state.camera.lookAt(swayX, 2 + swayY, targetZ - 10)
+    state.camera.lookAt(0, 2, targetZ - 10)
   })
 
   return (
