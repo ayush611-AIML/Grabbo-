@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title, description, canonical and og:url/title/description are rewritten per page
+         at build time (vite.config.js) and on view changes (src/seo.js) -->
+    <title>Grabbo @ SNU – Convenience Store & Café at Shiv Nadar University</title>
+    <meta name="description" content="Grabbo is the in-campus convenience store and café at the Shiv Nadar University Shopping Arcade, Greater Noida: snacks, beverages, coffee, bakery, health essentials and hostel delivery." />
+    <link rel="canonical" href="https://www.grabbo.store/" />
+    <meta name="theme-color" content="#121110" />
+    <meta property="og:site_name" content="Grabbo" />
+    <meta property="og:title" content="Grabbo @ SNU – Convenience Store & Café at Shiv Nadar University" />
+    <meta property="og:description" content="Grabbo is the in-campus convenience store and café at the Shiv Nadar University Shopping Arcade, Greater Noida: snacks, beverages, coffee, bakery, health essentials and hostel delivery." />
+    <meta property="og:url" content="https://www.grabbo.store/" />
+    <meta property="og:image" content="https://www.grabbo.store/store/grabbo_store_front.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="637" />
+    <meta property="og:image:alt" content="Grabbo storefront at the Shiv Nadar University Shopping Arcade" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Structured data for Google: who Grabbo is and where the store is.
+         Keep the address and phone numbers identical to the footer and the Google Business Profile.
+         Still to add once confirmed: "openingHoursSpecification", "priceRange", and the
+         Google Business Profile URL in "sameAs". -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": ["ConvenienceStore", "CafeOrCoffeeShop"],
+            "@id": "https://www.grabbo.store/#store",
+            "name": "Grabbo",
+            "alternateName": "Grabbo @ SNU",
+            "description": "In-campus convenience store, café and experience center at the Shiv Nadar University Shopping Arcade offering everyday essentials, café bites, beverages, late-night snacks, health essentials and hostel delivery.",
+            "url": "https://www.grabbo.store/",
+            "logo": "https://www.grabbo.store/logo.png",
+            "image": [
+              "https://www.grabbo.store/store/grabbo_store_front.jpg",
+              "https://www.grabbo.store/store/grabbo_store_counter.jpg",
+              "https://www.grabbo.store/store/grabbo_store_aisle.jpg"
+            ],
+            "telephone": "+91-9999725000",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "telephone": "+91-9289300102",
+              "areaServed": "IN"
+            },
+            "email": "grabbo.snu@gmail.com",
+            "foundingDate": "2021-04",
+            "founder": { "@type": "Person", "name": "Vijay Tiwary" },
+            "parentOrganization": { "@type": "Organization", "name": "Auctus Resources" },
+            "currenciesAccepted": "INR",
+            "areaServed": { "@type": "CollegeOrUniversity", "name": "Shiv Nadar University" },
+            "hasMap": "https://maps.google.com/?q=28.527621311362424,77.57296806811677",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Shopping Arcade, Shiv Nadar Institution of Eminence, G. T. Road, Dadri",
+              "addressLocality": "Greater Noida",
+              "addressRegion": "Uttar Pradesh",
+              "postalCode": "201314",
+              "addressCountry": "IN"
+            },
+            "geo": { "@type": "GeoCoordinates", "latitude": 28.527621311362424, "longitude": 77.57296806811677 },
+            "sameAs": ["https://www.instagram.com/grabbo_snu"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.grabbo.store/#website",
+            "name": "Grabbo",
+            "url": "https://www.grabbo.store/",
+            "inLanguage": "en-IN",
+            "publisher": { "@id": "https://www.grabbo.store/#store" }
+          }
+        ]
+      }
+    </script>
+    <!-- Fonts are self-hosted (@font-face at the top of src/style.css); preload the two the first screen uses -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/playfair-display-normal-latin.woff2" crossorigin>
+    <!-- First hero frame, so the storefront shows before the frame sequence script runs
+         (same media query as useMobileFrames in src/main.js) -->
+    <link rel="preload" as="image" href="/hero-frames-mobile/frame-001.webp" fetchpriority="high" media="(max-width: 900px) and (orientation: portrait)">
+    <link rel="preload" as="image" href="/hero-frames/ezgif-frame-001.webp" fetchpriority="high" media="not all and (max-width: 900px) and (orientation: portrait)">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+  </head>
+  <body>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <!-- 3D Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Content -->
+    <main class="content-overlay">
+      <nav class="navbar">
+        <div class="logo-wrapper" id="logo-home-btn" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          <img src="/logo-96.webp" alt="Grabbo Logo" width="42" height="42" style="width: 42px; height: 42px; border-radius: 50%; box-shadow: 0 2px 12px rgba(253,224,37,0.25); transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), box-shadow 0.35s ease; object-fit: cover;">
+          <div class="logo" style="margin: 0; display: flex;">
+            <span class="drop-letter" style="--delay: 0.1s">G</span>
+            <span class="drop-letter" style="--delay: 0.15s">r</span>
+            <span class="drop-letter" style="--delay: 0.2s">a</span>
+            <span class="drop-letter" style="--delay: 0.25s">b</span>
+            <span class="drop-letter" style="--delay: 0.3s">b</span>
+            <span class="drop-letter" style="--delay: 0.35s">o</span>
+          </div>
+        </div>
+        <div class="nav-menu" id="primary-nav-menu">
+          <div class="nav-links">
+            <a href="/story" class="nav-story-link">Story</a>
+            <a href="/products">Products</a>
+            <a href="/events">Events</a>
+            <a href="/cafe-fomo" class="nav-cafefomo-link">Café FOMO</a>
+            <a href="/#queries" class="nav-query-link">Query</a>
+          </div>
+          <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="btn-primary nav-follow-btn" aria-label="Follow Grabbo on Instagram" style="display: inline-flex; align-items: center; gap: 6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg><span class="nav-follow-label">Follow Us</span></a>
+        </div>
+        <button class="nav-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-nav-menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"></path>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- HOME VIEW -->
+      <div id="home-view" class="view-section active">
+        <!-- Storefront Sign Hotspot (Clicks open About section) -->
+        <button id="storefront-sign-btn" class="storefront-sign-hotspot" aria-label="About Grabbo - Storefront Sign"></button>
+
+        <header class="hero">
+          <div class="hero-content">
+            <h1 class="hero-brand-title">GRABBO<span class="visually-hidden"> – Convenience Store &amp; Café at Shiv Nadar University</span></h1>
+            <p class="hero-brand-subtitle">Everyday Essentials</p>
+          </div>
+          <button class="btn-large explore-btn">Explore Now</button>
+        </header>
+
+      <!-- Weather at SNU: food picks for the current campus weather (picks in src/content.js) -->
+      <section id="weather-picks" class="weather-section">
+        <div class="weather-banner">
+          <div class="weather-now">
+            <span class="author-badge">WEATHER AT SNU</span>
+            <div class="weather-reading">
+              <span class="weather-icon" id="weather-icon" aria-hidden="true">🌤️</span>
+              <span class="weather-temp" id="weather-temp">--°C</span>
+            </div>
+            <p class="weather-condition" id="weather-condition">Checking the weather on campus...</p>
+          </div>
+          <div class="weather-picks-body">
+            <h2 class="weather-title" id="weather-title">Today's Picks</h2>
+            <p class="weather-subtitle" id="weather-subtitle"></p>
+            <div class="weather-products" id="weather-products"></div>
+          </div>
+        </div>
+        <p class="weather-credit" id="weather-credit">Weather data from <a href="https://www.met.no/en" target="_blank" rel="noopener noreferrer">MET Norway</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>)</p>
+      </section>
+
+      <!-- Author & Founder Section (The Story) -->
+      <section id="story" class="author-section">
+        <div class="author-container">
+          <!-- Left Column: The Story & Journey -->
+          <div class="author-story">
+            <span class="author-badge">THE STORY</span>
+            <h2 class="author-title">GRABBO</h2>
+            <p class="author-description">
+              <strong>Auctus Resources</strong> is primarily a Corporate Consulting and Networking Agency. During one of its corporate consulting journeys in the midst of the pandemic, in <strong>April 2021</strong>, <strong>“GRABBO”</strong> was born — initially conceived to cater to the essential needs of the staff and support teams of <strong>Shiv Nadar University</strong> within the campus premises of Delhi NCR.
+            </p>
+            <p class="author-description">
+              As the world regained momentum post-pandemic, <strong>GRABBO</strong> continued to thrive, soon becoming a popular destination among the students who were captivated by its convenience and thoughtful presence.
+            </p>
+            <p class="author-description">
+              However, since its inception, GRABBO was envisioned to be more than just a convenience or departmental store. Staying true to that vision, GRABBO has now evolved into an <strong>Experience Center</strong> — a place that connects students, staff, service providers, and even parents, creating moments of engagement and community.
+            </p>
+            <p class="author-closing-note" style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; color: var(--primary); font-size: 1.05rem; line-height: 1.6; margin-top: 14px; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">
+              Visit GRABBO — to grab not just what you need, but a memory of experience.
+            </p>
+          </div>
+
+          <!-- Right Column: The Founder -->
+          <div class="author-profile">
+            <div class="founder-image-wrapper">
+              <div class="founder-image-circle">
+                <img src="/founder-portrait.png" alt="Founder Vijay Tiwary portrait" class="founder-photo" loading="lazy" />
+              </div>
+            </div>
+            <div class="founder-details">
+              <h3 class="founder-name">The Founder</h3>
+              <span class="founder-role">Vijay Tiwary</span>
+              <p class="founder-quote">
+                "I wanted to build a space where grabbing an everyday essential feels just as luxurious as walking into a high-end boutique."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section id="testimonials" class="glass-section testimonials-section-marquee">
+        <div style="text-align: center; margin-bottom: 25px; padding: 0 5%;">
+          <span class="author-badge">STUDENT & CAMPUS LOVE</span>
+          <h2 class="section-title" style="margin-bottom: 10px;">What The <span class="gradient-text">Campus Says</span></h2>
+          <p style="color: rgba(255, 255, 255, 0.72); font-size: 1.05rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
+            Honest experiences from students, faculty, parents, and clubs who make Grabbo their everyday campus home.
+          </p>
+        </div>
+        <div class="testimonials-marquee-container" id="dynamic-testimonials-grid">
+          <div style="color: rgba(255, 255, 255, 0.7); text-align: center; width: 100%; padding: 20px;">
+            Loading campus testimonials...
+          </div>
+        </div>
+      </section>
+
+      <section id="health-news" class="glass-section news-section-marquee" aria-labelledby="health-news-title">
+        <div style="text-align: center; margin-bottom: 25px; padding: 0 5%;">
+          <span class="author-badge">REAL-TIME HEALTH ALERTS</span>
+          <h2 class="section-title" id="health-news-title" style="margin-bottom: 10px;">Health <span class="gradient-text">News &amp; Precautions</span></h2>
+          <p style="color: rgba(255, 255, 255, 0.72); font-size: 1.05rem; max-width: 640px; margin: 0 auto; line-height: 1.6;">
+            Verified outbreak alerts and advisories from top publications across Delhi NCR. Click any card to read the full report directly on the publisher's website.
+          </p>
+        </div>
+        <div class="news-marquee-container" id="dynamic-news-grid">
+          <div style="color: rgba(255, 255, 255, 0.7); text-align: center; width: 100%; padding: 20px;">
+            Fetching latest health alerts for Delhi NCR...
+          </div>
+        </div>
+        <p class="news-disclaimer">Each news card links directly to the original publisher's article. Grabbo is not affiliated with these outlets. Tips are general information, not medical advice.</p>
+      </section>
+
+      <!-- CAFÉ FOMO Spotlight Section (Home View) -->
+      <section id="cafe-fomo-spotlight" class="glass-section fomo-spotlight-section" aria-labelledby="fomo-spotlight-title">
+        <div class="fomo-spotlight-container">
+          <div class="fomo-spotlight-content">
+            <span class="author-badge">UPCOMING VENTURE • SHOPPING ARCADE</span>
+            <h2 class="section-title" id="fomo-spotlight-title">CAFÉ <span class="gradient-text">FOMO</span></h2>
+            <p class="fomo-spotlight-tagline">“Feed Your FOMO”</p>
+            <p class="fomo-spotlight-desc">
+              Grabbo’s upcoming offline experiential hub at the Shiv Nadar University Shopping Arcade.
+              Small-batch artisanal brews, piping hot momos, loaded sourdough melts, late-night campus conversations,
+              and spontaneous hangout moments.
+            </p>
+            <div class="fomo-spotlight-highlights">
+              <div class="fomo-highlight-pill"><span class="fomo-pill-icon">☕</span> Artisanal Brews</div>
+              <div class="fomo-highlight-pill"><span class="fomo-pill-icon">🥟</span> Steamed &amp; Crispy Momos</div>
+              <div class="fomo-highlight-pill"><span class="fomo-pill-icon">✨</span> Campus Hangout Hub</div>
+            </div>
+            <div class="fomo-spotlight-actions">
+              <a href="/cafe-fomo" class="btn-primary fomo-spotlight-btn" aria-label="Explore CAFÉ FOMO Dedicated Page">
+                <span>Explore CAFÉ FOMO</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <a href="/cafe-fomo#cafe-fomo-menu" class="btn-primary store-intro-btn-secondary fomo-menu-anchor-btn">
+                Browse Menu &amp; Prices
+              </a>
+            </div>
+          </div>
+          <div class="fomo-spotlight-visual">
+            <div class="fomo-badge-bubble">Brewing Soon ☕</div>
+            <div class="fomo-spotlight-logo-wrap">
+              <img src="/images/cafe-fomo-logo.png" alt="CAFÉ FOMO Logo" width="140" height="140" loading="lazy">
+            </div>
+            <div class="fomo-spotlight-subtext">Shopping Arcade @ SNU</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- What and where, in plain text for visitors, search engines and AI assistants.
+           Add the opening hours here once confirmed (and in the JSON-LD above). -->
+      <section id="store-intro" class="store-intro">
+        <span class="author-badge">CAMPUS STORE &amp; CAFÉ</span>
+        <h2 class="store-intro-title">Your convenience store at Shiv Nadar University</h2>
+        <p class="store-intro-text">
+          Grabbo is the in-campus convenience store and café at the Shopping Arcade, Shiv Nadar University, Greater Noida (U.P. 201314).
+          We stock snacks, beverages, coffee, bakery, pantry staples and health essentials, run a heat &amp; eat café,
+          and deliver to student hostels and campus residences.
+        </p>
+        <div class="store-intro-actions">
+          <a href="tel:+919289300102" class="btn-primary">Call +91 9289300102</a>
+          <a href="https://maps.google.com/?q=28.527621311362424,77.57296806811677" target="_blank" rel="noopener noreferrer" class="btn-primary store-intro-btn-secondary directions-link">Get Directions</a>
+          <a href="/products" class="btn-primary store-intro-btn-secondary">Products &amp; Prices</a>
+        </div>
+      </section>
+
+      <!-- Queries & Collaboration: sent with EmailJS, or a pre-filled email if it isn't configured (see src/main.js) -->
+      <section id="queries" class="query-section" aria-labelledby="query-title">
+        <span class="author-badge">QUERIES &amp; COLLABORATION</span>
+        <h2 class="store-intro-title" id="query-title">Got a question or an idea? Let's talk.</h2>
+        <p class="query-intro-text">
+          Ask about products, orders or hostel delivery, pitch a collaboration, event or sponsorship. Fill this in and it comes straight to our inbox.
+        </p>
+        <form class="query-form" id="query-form" action="#">
+          <div class="query-row">
+            <label class="query-field">
+              <span>Name</span>
+              <input type="text" name="name" required autocomplete="name" placeholder="Your name">
+            </label>
+            <label class="query-field">
+              <span>Email</span>
+              <input type="email" name="email" required autocomplete="email" placeholder="example@email.com">
+            </label>
+          </div>
+          <div class="query-row">
+          <label class="query-field">
+            <span>Phone (optional)</span>
+            <input type="tel" name="phone" autocomplete="tel" inputmode="tel" pattern="[+0-9 ()-]{7,20}" title="Digits, spaces, +, - and brackets only" placeholder="+91 98765 43210">
+          </label>
+          <label class="query-field">
+            <span>Topic</span>
+            <select name="topic" id="query-topic">
+              <option value="General query">General query</option>
+              <option value="Order / delivery">Order or hostel delivery</option>
+              <option value="Product request">Product request</option>
+              <option value="Collaboration">Collaboration or partnership</option>
+              <option value="Event / sponsorship">Event or sponsorship</option>
+            </select>
+          </label>
+          </div>
+          <label class="query-field">
+            <span>Message</span>
+            <textarea name="message" rows="4" placeholder="Tell us what you need"></textarea>
+          </label>
+          <button type="submit" class="btn-primary query-submit">Send Query</button>
+          <p class="query-status" id="query-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- Marquee Section -->
+      <div class="marquee-container">
+        <div class="marquee-group">
+          <span>PREMIUM SNACKS</span>
+          <span class="dot">•</span>
+          <span>LATE NIGHT CRAVINGS</span>
+          <span class="dot">•</span>
+          <span>INSTANT ENERGY</span>
+          <span class="dot">•</span>
+          <span>CAMPUS ESSENTIALS</span>
+          <span class="dot">•</span>
+          <span>CURATED BEVERAGES</span>
+          <span class="dot">•</span>
+          <span>COLD BREWS & BAKERY</span>
+          <span class="dot">•</span>
+          <span>SHOPPING ARCADE @ SNU</span>
+          <span class="dot">•</span>
+        </div>
+        <div class="marquee-group" aria-hidden="true">
+          <span>PREMIUM SNACKS</span>
+          <span class="dot">•</span>
+          <span>LATE NIGHT CRAVINGS</span>
+          <span class="dot">•</span>
+          <span>INSTANT ENERGY</span>
+          <span class="dot">•</span>
+          <span>CAMPUS ESSENTIALS</span>
+          <span class="dot">•</span>
+          <span>CURATED BEVERAGES</span>
+          <span class="dot">•</span>
+          <span>COLD BREWS & BAKERY</span>
+          <span class="dot">•</span>
+          <span>SHOPPING ARCADE @ SNU</span>
+          <span class="dot">•</span>
+        </div>
+      </div>
+
+        <footer class="site-footer">
+          <div class="footer-container">
+            <div class="footer-grid">
+              <!-- Column 1: Brand & Bio -->
+              <div class="footer-col footer-col-brand">
+                <div class="footer-brand-header">
+                  <img src="/logo-96.webp" alt="Grabbo Logo" class="footer-brand-logo" width="48" height="48" loading="lazy">
+                  <span class="footer-brand-name">GRABBO</span>
+                </div>
+                <p class="footer-tagline">
+                  Elevating the everyday by turning simple essentials into an extraordinary, curated experience.
+                </p>
+                <div class="footer-social-row">
+                  <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="footer-social-circle" aria-label="Instagram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Column 2: Visit Us -->
+              <div class="footer-col footer-col-visit">
+                <h3 class="footer-heading">Visit Us</h3>
+                <div class="footer-info-list">
+                  <div class="footer-info-item">
+                    <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Shopping Arcade<br>Shiv Nadar Institution of Eminence,<br>G. T. Road, Dadri<br>Greater Noida, U.P.<br>India - 201314</span>
+                  </div>
+                  <div class="footer-info-item">
+                    <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span><a href="tel:+919999725000">+91 9999725000</a> / <a href="tel:+919289300102">9289300102</a></span>
+                  </div>
+                  <div class="footer-info-item">
+                    <svg class="footer-info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <span>
+                      <a href="mailto:auctusresources@gmail.com">auctusresources@gmail.com</a><br>
+                      <a href="mailto:grabbo.snu@gmail.com">grabbo.snu@gmail.com</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Column 3: Queries & Collaboration (form lives in #queries above) -->
+              <div class="footer-col footer-col-collab">
+                <h3 class="footer-heading">Queries &amp; Collaboration</h3>
+                <p class="footer-collab-text">
+                  Questions, partnerships or events: it all goes through one form.
+                </p>
+                <a href="#queries" class="footer-join-btn">ASK US →</a>
+              </div>
+            </div>
+
+            <!-- Bottom Bar / Subfooter -->
+            <div class="footer-bottom">
+              <div class="footer-copyright">
+                © 2026 GRABBO CONVENIENCE. ALL RIGHTS RESERVED.
+              </div>
+              <div class="footer-legal-links">
+                <a href="/about">ABOUT</a>
+                <a href="/cafe-fomo">CAFÉ FOMO</a>
+                <a href="/privacy">PRIVACY</a>
+                <a href="/privacy#terms">TERMS</a>
+              </div>
+            </div>
+          </div>
+        </footer>
+        </div> <!-- End Home View -->
+
+        <!-- ABOUT VIEW -->
+        <div id="about-view" class="view-section hidden">
+          <div class="about-card">
+            <div class="about-header">
+              <div>
+                <span class="about-section-badge">DISCOVER GRABBO</span>
+                <h2 class="section-title">About <span class="gradient-text">Grabbo</span></h2>
+              </div>
+              <button class="btn-primary small-btn about-back-btn">← Back to Home</button>
+            </div>
+
+            <div class="about-content-linear">
+              <!-- SECTION 1: ABOUT THE STORE -->
+              <section class="about-linear-section" id="section-about-store">
+                <div class="about-panel-header">
+                  <span class="about-section-badge">01 • IN-CAMPUS DEPARTMENTAL & CONVENIENCE</span>
+                  <h3 class="about-panel-title">About The Store</h3>
+                  <p class="about-panel-subtitle">In-Campus Full-Fledged Departmental Store with Specific Focus on Captive Audience</p>
+                </div>
+                
+                <div class="about-lead">
+                  <strong>GRABBO</strong> is an in-campus full-fledged departmental store with a specific focus on our captive audience at <strong>Shiv Nadar University</strong>. Built to serve students, staff, service providers, and parents with daily convenience and holistic campus care.
+                </div>
+
+                <!-- Real Store Photography Showcase -->
+                <div class="store-photos-grid">
+                  <div class="store-photo-card large">
+                    <img src="/store/grabbo_store_front.jpg" alt="Grabbo Storefront Entrance @ SNU Shopping Arcade" width="1200" height="637" loading="lazy">
+                    <div class="store-photo-caption">
+                      <span>🏪 Storefront Entrance @ SNU Shopping Arcade</span>
+                    </div>
+                  </div>
+                  <div class="store-photo-card">
+                    <img src="/store/grabbo_store_counter.jpg" alt="Checkout Counter and Namaste Community Wall" width="1200" height="655" loading="lazy">
+                    <div class="store-photo-caption">
+                      <span>✨ Checkout Counter & Namaste Wall</span>
+                    </div>
+                  </div>
+                  <div class="store-photo-card">
+                    <img src="/store/grabbo_store_aisle.jpg" alt="Grabbo In-Store Aisles and Shelves" width="1200" height="661" loading="lazy">
+                    <div class="store-photo-caption">
+                      <span>🛒 Curated Aisles & Everyday Groceries</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 8 Official Store Offerings & Pillars -->
+                <div class="about-grid store-pillars-grid">
+                  <div class="about-item">
+                    <span class="about-item-icon">🏪</span>
+                    <div class="about-item-text">
+                      <strong>Full-Fledged Departmental Store</strong>
+                      In-campus full-fledged departmental store with specific focus on our captive audience.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🍲</span>
+                    <div class="about-item-text">
+                      <strong>In-Store 'Heat & Eat' Café Shop</strong>
+                      In-store heat and eat café shop for fresh and healthy takeaways on the go.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🎤</span>
+                    <div class="about-item-text">
+                      <strong>'Local Vocal' Lounge Area</strong>
+                      In-store 'Local Vocal' lounge area for impromptu vocal, karaoke, stand-up, and dramatic performances.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🛵</span>
+                    <div class="about-item-text">
+                      <strong>Hostel & Home Deliveries</strong>
+                      Direct delivery service to student hostels and on-campus residences.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🤝</span>
+                    <div class="about-item-text">
+                      <strong>Clubs & Societies Engagement</strong>
+                      Active partnerships and engagement with student-managed university clubs and societies.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">👨‍👩‍👦</span>
+                    <div class="about-item-text">
+                      <strong>Distant Support to Parents</strong>
+                      Distant support channel for parents for any essential needs or care for their wards.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🧭</span>
+                    <div class="about-item-text">
+                      <strong>Facility Desk for Off-Campus Needs</strong>
+                      Dedicated facility desk for travel, accommodation, postal services, money transfers, and logistical help.
+                    </div>
+                  </div>
+
+                  <div class="about-item">
+                    <span class="about-item-icon">🏺</span>
+                    <div class="about-item-text">
+                      <strong>GI-Tagged & Handicraft Products</strong>
+                      In-store sale and promotion of handicrafts and originality of GI-tagged products of "Home Abode".
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <div class="about-section-divider"></div>
+
+              <!-- SECTION 2: OUR VISION -->
+              <section class="about-linear-section" id="section-our-vision">
+                <div class="about-panel-header">
+                  <span class="about-section-badge">02 • OUR VISION</span>
+                  <h3 class="about-panel-title">Our Vision</h3>
+                  <p class="about-panel-subtitle">Connecting Students, Staff, and Communities Through Meaningful Experiences</p>
+                </div>
+
+                <div class="vision-card-layout">
+                  <div class="vision-text-content">
+                    <div class="vision-statement-box">
+                      <p class="vision-quote-text">
+                        “To create a vibrant and inclusive experience hub that connects students, staff, and communities — offering not just products, but meaningful interactions, memories, and a sense of belonging within every campus we serve.”
+                      </p>
+                    </div>
+
+                    <div class="about-grid vision-pillars-grid">
+                      <div class="about-item">
+                        <span class="about-item-icon">✨</span>
+                        <div class="about-item-text">
+                          <strong>Vibrant Experience Hub</strong>
+                          Far beyond shelves — an inclusive social landmark connecting every part of campus life.
+                        </div>
+                      </div>
+                      <div class="about-item">
+                        <span class="about-item-icon">🤝</span>
+                        <div class="about-item-text">
+                          <strong>Belonging & Connection</strong>
+                          Cultivating enduring youth memories, shared moments, and lasting community spirit.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="vision-visual-card">
+                    <img src="/about/vision_sunrise.jpg" alt="Grabbo Vision - Expanding Horizons & Tomorrow's Journey" width="236" height="378" loading="lazy">
+                    <div class="vision-visual-badge">
+                      <span>🌅 The Journey Ahead</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <div class="about-section-divider"></div>
+
+              <!-- SECTION 3: OUR PHILOSOPHY -->
+              <section class="about-linear-section" id="section-our-philosophy" aria-labelledby="philosophy-title">
+                <div class="about-panel-header">
+                  <span class="about-section-badge">03 • OUR PHILOSOPHY</span>
+                  <h3 class="about-panel-title" id="philosophy-title">Our Philosophy</h3>
+                </div>
+
+                <div class="philosophy-layout">
+                  <div class="philosophy-grid">
+                  <blockquote class="philosophy-principle">
+                    <p class="philosophy-verse" lang="sa">को हि भारः समर्थानां</p>
+                    <p class="philosophy-transliteration" lang="sa-Latn">Ko hi bharah samarthanam</p>
+                    <p class="philosophy-meaning">No task is impossible for a competent person.</p>
+                  </blockquote>
+                  <blockquote class="philosophy-principle">
+                    <p class="philosophy-verse" lang="sa">किं दूरं व्यवसायिनाम् ।</p>
+                    <p class="philosophy-transliteration" lang="sa-Latn">Kim duram vyavasayinam</p>
+                    <p class="philosophy-meaning">No place is distant for a businessperson.</p>
+                  </blockquote>
+                  <blockquote class="philosophy-principle">
+                    <p class="philosophy-verse" lang="sa">को विदेशः सुविद्यानां</p>
+                    <p class="philosophy-transliteration" lang="sa-Latn">Ko videshah suvidyanam</p>
+                    <p class="philosophy-meaning">No land is foreign to an educated person.</p>
+                  </blockquote>
+                  <blockquote class="philosophy-principle">
+                    <p class="philosophy-verse" lang="sa">कः परः प्रियवादिनाम् ॥</p>
+                    <p class="philosophy-transliteration" lang="sa-Latn">Kah parah priyavadinam</p>
+                    <p class="philosophy-meaning">No one is a stranger to a good communicator.</p>
+                  </blockquote>
+                  </div>
+                  <figure class="philosophy-photo">
+                    <img src="/about/philosophy-storefront.webp" alt="A young visitor beside the illuminated Grabbo sign and Diwali decorations at the store entrance" width="1086" height="1448" loading="lazy" decoding="async">
+                  </figure>
+                </div>
+              </section>
+
+              <div class="about-section-divider"></div>
+
+              <!-- SECTION 4: OUR MISSION -->
+              <section class="about-linear-section" id="section-our-mission">
+                <div class="about-panel-header">
+                  <span class="about-section-badge">04 • OUR MISSION</span>
+                  <h3 class="about-panel-title">Our Mission</h3>
+                  <p class="about-panel-subtitle">Convenience, Quality & Purposeful Community Engagement</p>
+                </div>
+
+                <div class="mission-card-layout">
+                  <div class="mission-visual-card">
+                    <img src="/about/mission_teamwork.jpg" alt="Grabbo Mission - Collaboration, Empathy & Unity" width="235" height="374" loading="lazy">
+                    <div class="mission-visual-badge">
+                      <span>🤝 Unity & Collaboration</span>
+                    </div>
+                  </div>
+
+                  <div class="mission-pillars-list">
+                    <div class="mission-pillar-item">
+                      <div class="mission-pillar-number">01</div>
+                      <div class="mission-pillar-content">
+                        <strong>Redefining the Campus Store</strong>
+                        <p>To redefine the idea of a campus store by combining convenience, quality, and community engagement.</p>
+                      </div>
+                    </div>
+
+                    <div class="mission-pillar-item">
+                      <div class="mission-pillar-number">02</div>
+                      <div class="mission-pillar-content">
+                        <strong>Where Needs Meet Experiences</strong>
+                        <p>To provide a curated space where needs meet experiences, fostering connection among students, faculty, service providers, and parents.</p>
+                      </div>
+                    </div>
+
+                    <div class="mission-pillar-item">
+                      <div class="mission-pillar-number">03</div>
+                      <div class="mission-pillar-content">
+                        <strong>Innovation, Empathy & Emotional Value</strong>
+                        <p>To continuously evolve through innovation, empathy, and collaboration, ensuring that every visit to <strong>GRABBO</strong> adds value to campus life — both functionally and emotionally.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <div class="about-section-divider"></div>
+
+              <!-- SECTION 5: UPCOMING EVENTS & OFFERS -->
+              <section class="about-linear-section" id="section-about-events">
+                <div class="about-panel-header">
+                  <span class="about-section-badge">05 • CAMPUS CELEBRATIONS</span>
+                  <h3 class="about-panel-title">Upcoming Events & Offers</h3>
+                  <p class="about-panel-subtitle">Celebrate, Connect & Unwind with the Grabbo Community</p>
+                </div>
+
+                <!-- Event cards are built from src/content.js -->
+                <div id="about-events-list" style="margin-top: 18px;"></div>
+              </section>
+
+              <!-- DIRECT REDIRECT TO PRODUCT SECTION -->
+              <div class="about-direct-redirect-box">
+                <span class="about-section-badge" style="margin-bottom: 8px;">READY TO EXPLORE?</span>
+                <h4 class="about-redirect-prompt">Discover What's Fresh & In-Store</h4>
+                <p class="about-redirect-sub">Browse our curated collection of beverages, bakery treats, snacks, coffee & health essentials.</p>
+                <div class="about-actions-row">
+                  <button class="btn-primary direct-catalog-btn" id="about-redirect-catalog-btn">
+                    <span>Explore Products Collection</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </button>
+                  <a href="https://www.instagram.com/grabbo_snu" target="_blank" rel="noopener noreferrer" class="btn-primary btn-outline-social" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff !important; box-shadow: none; display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    Follow @grabbo_snu
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div> <!-- End About View -->
+
+      <!-- CATALOG VIEW -->
+      <div id="catalog-view" class="view-section hidden">
+        <div class="catalog-container" style="position: relative;">
+          <div class="catalog-header">
+            <h2 class="section-title">Products <span class="gradient-text">&amp; Prices</span></h2>
+            <button id="back-to-home" class="btn-primary small-btn">← Back to Home</button>
+          </div>
+          
+          <div class="category-tabs">
+            <button class="tab-btn active" data-category="precautions">Precautions & Health</button>
+            <button class="tab-btn" data-category="beverages">Beverages & Shakes</button>
+            <button class="tab-btn" data-category="bakery">Bakery & Sweets</button>
+            <button class="tab-btn" data-category="coffee">Coffee & Pantry</button>
+            <button class="tab-btn" data-category="snacks">Snacks & Chips</button>
+          </div>
+
+          <div class="catalog-grid" id="catalog-grid">
+            <!-- Products will be injected here via JS -->
+          </div>
+        </div>
+      </div> <!-- End Catalog View -->
+
+      <!-- EVENTS VIEW -->
+      <div id="events-view" class="view-section hidden">
+        <div class="events-container">
+          <div class="events-header">
+            <div>
+              <span class="author-badge" style="margin-bottom: 8px;">CAMPUS LIFE & ARCADE</span>
+              <h2 class="section-title" style="margin-bottom: 0; text-align: left;">Upcoming <span class="gradient-text">Events & Offers</span></h2>
+            </div>
+            <button class="btn-primary small-btn events-back-btn">← Back to Home</button>
+          </div>
+
+          <div class="events-grid" id="events-grid">
+            <!-- Event cards are built from src/content.js -->
+          </div>
+
+          <!-- Past events (shown only when there are any) -->
+          <div class="past-events-section" id="past-events-section" hidden>
+            <div class="events-header">
+              <div>
+                <span class="author-badge" style="margin-bottom: 8px;">LOOKING BACK</span>
+                <h2 class="section-title" style="margin-bottom: 0; text-align: left;">Past <span class="gradient-text">Events</span></h2>
+              </div>
+            </div>
+            <div class="events-grid" id="past-events-grid"></div>
+          </div>
+        </div>
+      </div> <!-- End Events View -->
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

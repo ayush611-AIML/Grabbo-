@@ -1,8 +1,50 @@
 {
-  "crons": [
+  "trailingSlash": false,
+  "rewrites": [
     {
-      "path": "/api/cron/generate-article",
-      "schedule": "0 0 * * 0"
+      "source": "/api/news/rss/search",
+      "destination": "https://news.google.com/rss/search"
+    },
+    {
+      "source": "/:page(products|about|events|cafe-fomo|privacy)",
+      "destination": "/:page/index.html"
+    },
+    {
+      "source": "/story",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/weather",
+      "destination": "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=28.5269&lon=77.5754"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
+      ]
+    },
+    {
+      "source": "/(assets|fonts)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/(hero-frames|hero-frames-mobile|products|store|about|events)/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/logo-96.webp",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }]
     }
   ]
 }
